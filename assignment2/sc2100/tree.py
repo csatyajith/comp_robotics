@@ -9,8 +9,9 @@ class Tree:
         self.goal = goal
 
     def add(self, point1, point2):
-        self.tree[point1].add(point2)
-        self.tree[point2] = set()
+        if point1 != point2:
+            self.tree[point1].add(point2)
+            self.tree[point2] = set()
 
     def exists(self, point):
         return True if point in self.tree else False
@@ -34,15 +35,20 @@ class Tree:
                 min_dist = distance
         return min_pt
 
-    def extend(self, point1, point2):
+    def extend(self, point1, point2, discretization_const=0.1):
         # Discretized version
-        len_ab = self.euclidean_dist(point1, point2)
-        len_ratio = 0.1 / len_ab
         i = point1
+        new_x, new_y = point1
         while True:
-            new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 2)
-            new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 2)
+            len_ab = self.euclidean_dist((new_x, new_y), point2)
+            len_ratio = 0.1 / len_ab
+            new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 1)
+            new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 1)
             if not collision.isCollisionFree(self.robot, (new_x, new_y), self.obstacles):
                 break
-            i = new_x, new_y
+            if self.euclidean_dist(point1, (new_x, new_y)) < self.euclidean_dist(point1, point2):
+                i = new_x, new_y
+            else:
+                break
         self.add(point1, i)
+        return i

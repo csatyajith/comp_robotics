@@ -32,11 +32,12 @@ class Environment:
 class Robot:
     def __init__(self, robot_coords):
         self.robot_coords = robot_coords
+        self.robot_origin = robot_coords
 
     def translate(self, target: tuple):
         new_x, new_y = target
         new_coords = []
-        for c in self.robot_coords:
+        for c in self.robot_origin:
             new_coords.append((c[0]+new_x, c[1]+new_y))
         self.robot_coords = new_coords
 
@@ -97,7 +98,7 @@ class EnvironmentVisualizer:
     def fill_robot(self, color="blue"):
         self.ax.fill([a[0] for a in self.robot.robot_coords], [a[1] for a in self.robot.robot_coords], color=color)
 
-    def plot_tree(self, tree):
-        for k, v in tree.tree.items():
+    def plot_tree(self):
+        for k, v in self.environment.tree.tree.items():
             for pt in v:
                 self.ax.plot([k[0], pt[0]], [k[1], pt[1]], color="k")

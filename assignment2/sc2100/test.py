@@ -4,6 +4,7 @@ import sampler
 import visualizer
 from environment import EnvSimulator
 from tree import Tree
+import rrt
 
 
 def test_parse_sample_visualizer():
@@ -22,6 +23,8 @@ def test_tree():
     tree.extend((4.5, 1), (4.5, 5))
 
     env_sim = EnvSimulator(10, 10, rc)
+    env_sim.env.tree = tree
+    print(env_sim.robot.robot_coords)
     env_sim.env_vis.fill_robot(color="blue")
     env_sim.env.set_start_state(pr[0][0])
     env_sim.env.set_end_state(pr[0][1])
@@ -32,9 +35,38 @@ def test_tree():
         env_sim.env.add_point(point)
     env_sim.env_vis.fill_points()
     env_sim.robot.translate(env_sim.env.end)
+    print(env_sim.robot.robot_coords)
     env_sim.env_vis.fill_robot(color="green")
-    env_sim.env_vis.plot_tree(tree)
+    env_sim.env_vis.plot_tree()
+    env_sim.robot.translate((6, 7))
+    print(env_sim.robot.robot_coords)
+    env_sim.env_vis.fill_robot()
+
     env_sim.env_vis.show_environment()
 
+def test_rrt():
+    rc, ob, pr = file_parse.parse_problem("test_cases/robot_env_01.txt", "test_cases/probs_01.txt")
+
+    env_sim = EnvSimulator(10, 10, rc)
+    env_sim.env_vis.fill_robot(color="blue")
+    env_sim.env.set_start_state(pr[0][0])
+    env_sim.env.set_end_state(pr[0][1])
+    for o in ob:
+        env_sim.env.create_obstacle(o)
+
+    env_sim.env_vis.fill_obstacles()
+    env_sim.robot.translate(env_sim.env.end)
+    env_sim.env_vis.fill_robot(color="green")
+    env_sim.robot.translate((6, 7))
+    env_sim.env_vis.fill_robot()
+    success, tree, path = rrt.RRT(rc, ob, pr[0][0], pr[0][1], 100)
+    print(success)
+    env_sim.env.tree = tree
+    env_sim.env_vis.plot_tree()
+    # for key in env_sim.env.tree.tree:
+    #     print(key, env_sim.env.tree.tree[key])
+    env_sim.env_vis.show_environment()
+
+
 if __name__ == '__main__':
-    test_tree()
+    test_rrt()

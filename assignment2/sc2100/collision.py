@@ -66,6 +66,9 @@ def isCollisionFree(robot_coords, point, obstacles):
     robot = Robot(robot_coords)
     robot.translate(point)
     for rc in robot.robot_coords:
+        if rc[0] < 0 or rc[0] > 10 or rc[1] < 0 or rc[0] > 10:
+            return False
+
         for o in obstacles:
             if is_inside_polygon(o, rc):
                 return False
