@@ -30,6 +30,25 @@ class Tree:
             curr = parent_node
         return total_cost
 
+    def check_rewire_valid(self, point1, point2, discretization_const=0.01):
+        i = point1
+        new_x, new_y, new_theta = point1
+        while True:
+            len_ab = self.state_dist((new_x, new_y, new_theta), point2)
+            len_ratio = discretization_const / len_ab
+            if len_ratio > 1:
+                break
+            new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 3)
+            new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 3)
+            new_theta = round((1 - len_ratio) * i[2] + len_ratio * point2[2], 3)
+            if not collision.isCollisionFree(self.robot, (new_x, new_y, new_theta), self.obstacles):
+                return False
+            if self.state_dist(point1, (new_x, new_y, new_theta)) < self.state_dist(point1, point2):
+                i = new_x, new_y, new_theta
+            else:
+                break
+        return True
+
     def rewire(self, point, r, prior_nearest):
         best_node = prior_nearest
         node_cost = None
@@ -40,9 +59,7 @@ class Tree:
             dist = self.state_dist(node, point)
             node_cost = self.get_cost(node)
             if dist < r:
-                if collision.line_intersects_polygon(node, point, self.obstacles):
-                    continue
-                if node_cost + dist < min_dist and collision.isCollisionFree(self.robot, node, self.obstacles):
+                if node_cost + dist < min_dist and self.check_rewire_valid(node, point):
                     best_node = node
                     min_dist = node_cost + dist
         if best_node != prior_nearest:

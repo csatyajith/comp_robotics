@@ -32,5 +32,11 @@ def test_rrt():
     visualizer.visualize_rrt(robot, ob, pr[0][0], pr[0][1], 1000)
 
 
+def test_rrt_star():
+    width, height, ob, pr = file_parse.parse_problem("test_cases/robot_env_01.txt", "test_cases/probs_01.txt")
+    robot = Robot(width, height)
+    visualizer.visualize_rrt_star(robot, ob, pr[0][0], pr[0][1], 1000)
+
+
 if __name__ == '__main__':
-    test_rrt()
+    test_rrt_star()
