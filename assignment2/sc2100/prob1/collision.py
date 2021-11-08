@@ -1,4 +1,4 @@
-from environment import Robot
+from environment_r import Robot
 
 
 def on_boundary(p: tuple, q: tuple, r: tuple) -> bool:
@@ -62,11 +62,25 @@ def is_inside_polygon(points: list, p: tuple) -> bool:
     return count % 2 == 1
 
 
+def line_intersects_polygon(p1, p2, obstacles):
+    n = len(obstacles)
+
+    i = 0
+    for points in obstacles:
+        while True:
+            j = (i + 1) % n
+            if do_intersect(points[i], points[j], p1, p2):
+                return False
+            i = j
+            if i == 0:
+                break
+
+
 def isCollisionFree(robot_coords, point, obstacles):
     robot = Robot(robot_coords)
     robot.translate(point)
     for rc in robot.robot_coords:
-        if rc[0] < 0 or rc[0] > 10 or rc[1] < 0 or rc[0] > 10:
+        if rc[0] < 0 or rc[0] > 10 or rc[1] < 0 or rc[1] > 10:
             return False
 
         for o in obstacles:

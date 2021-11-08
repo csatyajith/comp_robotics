@@ -98,6 +98,10 @@ class EnvironmentVisualizer:
     def fill_robot(self, color="blue"):
         self.ax.fill([a[0] for a in self.robot.robot_coords], [a[1] for a in self.robot.robot_coords], color=color)
 
+    def plot_path(self, path):
+        for i in range(len(path) - 1):
+            self.ax.plot([path[i][0], path[i+1][0]], [path[i][1], path[i+1][1]], color="k")
+
     def plot_tree(self):
         for k, v in self.environment.tree.tree.items():
             for pt in v:

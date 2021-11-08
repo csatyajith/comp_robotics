@@ -1,4 +1,4 @@
-from assignment2.sc2100.environment import EnvSimulator
+from environment_r import EnvSimulator
 
 
 def visualize_problem(points, robot, obstacles, start, goal):

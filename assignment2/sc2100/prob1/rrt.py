@@ -2,9 +2,9 @@ import sampler
 from tree import Tree
 
 
-def RRT(robot, obstacles, start, goal, n_iter):
+def RRT(robot, obstacles, start, goal, n_iter, radius_around_goal=0.1):
     rrt_tree = Tree(robot, obstacles, start, goal)
-    radius = 0.3
+    radius = radius_around_goal
     success = False
     for _ in range(n_iter):
         random_point = sampler.sample()
