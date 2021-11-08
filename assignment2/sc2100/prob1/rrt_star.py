@@ -14,7 +14,7 @@ def RRT_star(robot, obstacles, start, goal, n_iter, radius_around_goal=0.1, radi
         best_extension = rrt_star_tree.rewire(extended_point, radius_rewire, nearest_in_tree)
         if best_extension != extended_point:
             rewires += 1
-            print("Rewiring {} successful. Original: {}   Rewired: {}".format(rewires, extended_point, best_extension))
+            # print("Rewiring {} successful. Original: {}   Rewired: {}".format(rewires, extended_point, best_extension))
         # print("Sampled point: ", random_point, "Nearest in tree: ", nearest_in_tree, "Extended until:", best_extension)
         # print("Updated tree:", rrt_star_tree.tree, "\n")
         dist = Tree.euclidean_dist(best_extension, goal)

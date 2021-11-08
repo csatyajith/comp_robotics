@@ -48,13 +48,50 @@ def test_tree():
 
 def test_rrt():
     rc, ob, pr = file_parse.parse_problem("test_cases/robot_env_01.txt", "test_cases/probs_01.txt")
-    visualizer.visualize_rrt(rc, ob, pr)
+    path = visualizer.visualize_rrt(rc, ob, pr)
+    if path is not None:
+        visualizer.visualize_path(rc, ob, pr, path)
+
+
+def test_rrt_success_rate():
+    rc, ob, pr = file_parse.parse_problem("test_cases/robot_env_01.txt", "test_cases/probs_01.txt")
+    successes = []
+    iterations = []
+    for i in range(10, 201, 10):
+        print("Measuring with {} iterations".format(i))
+        s = []
+        for j in range(50):
+            success, tree, path = rrt.RRT(rc, ob, pr[0][0], pr[0][1], i, radius_around_goal=0.2)
+            s.append(1 if success else 0)
+        iterations.append(i)
+        successes.append(sum(s)/len(s))
+    for i in range(len(iterations)):
+        print(iterations[i], successes[i])
+
+
+def test_rrt_star_success_rate():
+    rc, ob, pr = file_parse.parse_problem("test_cases/robot_env_01.txt", "test_cases/probs_01.txt")
+    successes = []
+    iterations = []
+    for i in range(10, 201, 10):
+        print("Measuring with {} iterations".format(i))
+        s = []
+        for j in range(50):
+            success, tree, path = rrt_star.RRT_star(rc, ob, pr[0][0], pr[0][1], i, radius_around_goal=0.2)
+            s.append(1 if success else 0)
+        iterations.append(i)
+        successes.append(sum(s)/len(s))
+    print("Iterations \t Success Rate")
+    for i in range(len(iterations)):
+        print(iterations[i], " \t", successes[i])
 
 
 def test_rrt_star():
     rc, ob, pr = file_parse.parse_problem("test_cases/robot_env_01.txt", "test_cases/probs_01.txt")
-    visualizer.visualize_rrt_star(rc, ob, pr)
+    path = visualizer.visualize_rrt_star(rc, ob, pr)
+    if path is not None:
+        visualizer.visualize_path(rc, ob, pr, path)
 
 
 if __name__ == '__main__':
-    test_rrt_star()
+    test_rrt_star_success_rate()

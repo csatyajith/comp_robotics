@@ -108,7 +108,7 @@ class Tree:
             len_ab = self.state_dist((new_x, new_y, new_theta), point2)
             len_ratio = discretization_const / len_ab
             if len_ratio > 1:
-                break
+                return point2
             new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 3)
             new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 3)
             new_theta = round((1 - len_ratio) * i[2] + len_ratio * point2[2], 3)

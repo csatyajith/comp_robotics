@@ -92,13 +92,13 @@ class Tree:
         # Discretized version
         i = point1
         new_x, new_y = point1
-        if self.euclidean_dist(point1, point2) < self.eps:
-            return i
         while True:
             len_ab = self.euclidean_dist((new_x, new_y), point2)
+            if len_ab == 0:
+                break
             len_ratio = discretization_const / len_ab
             if len_ratio > 1:
-                return point2
+                break
             new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 3)
             new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 3)
             if not collision.isCollisionFree(self.robot, (new_x, new_y), self.obstacles):

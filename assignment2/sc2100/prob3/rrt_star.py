@@ -2,7 +2,7 @@ import sampler
 from tree import Tree
 
 
-def RRT_star(robot, obstacles, start, goal, n_iter, radius_around_goal=0.4, radius_rewire=0.5):
+def RRT_star(robot, obstacles, start, goal, n_iter, radius_around_goal=0.1, radius_rewire=0.5):
     rrt_star_tree = Tree(robot, obstacles, start, goal)
     rg = radius_around_goal
     success = False
@@ -14,7 +14,7 @@ def RRT_star(robot, obstacles, start, goal, n_iter, radius_around_goal=0.4, radi
         best_extension = rrt_star_tree.rewire(extended_point, radius_rewire, nearest_in_tree)
         if best_extension != extended_point:
             rewires += 1
-            # print("Rewiring {} successful. Original: {}   Rewired: {}".format(rewires, extended_point, best_extension))
+            print("Rewiring {} successful. Original: {}   Rewired: {}".format(rewires, extended_point, best_extension))
         dist = rrt_star_tree.state_dist(best_extension, goal)
         if dist < 2 * rg:
             rrt_star_tree.add(best_extension, goal)

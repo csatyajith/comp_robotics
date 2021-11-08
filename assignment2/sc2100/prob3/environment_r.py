@@ -1,7 +1,8 @@
 from typing import List
 
 from matplotlib import pyplot as plt
-from matplotlib import animation
+
+from robot import Robot
 
 
 class Environment:
@@ -16,12 +17,12 @@ class Environment:
         self.tree = tree
 
     def set_start_state(self, coords):
-        x, y = coords
-        self.start = (x, y)
+        x, y, theta = coords
+        self.start = (x, y, theta)
 
     def set_end_state(self, coords):
-        x, y = coords
-        self.end = (x, y)
+        x, y, theta = coords
+        self.end = (x, y, theta)
 
     def create_obstacle(self, obstacle_coords=List[tuple]):
         self.obstacles.append(obstacle_coords)
@@ -30,23 +31,10 @@ class Environment:
         self.points.append((coords[0], coords[1]))
 
 
-class Robot:
-    def __init__(self, robot_coords):
-        self.robot_coords = robot_coords
-        self.robot_origin = robot_coords
-
-    def translate(self, target: tuple):
-        new_x, new_y = target
-        new_coords = []
-        for c in self.robot_origin:
-            new_coords.append((c[0]+new_x, c[1]+new_y))
-        self.robot_coords = new_coords
-
-
 class EnvSimulator:
-    def __init__(self, env_x, env_y, robot_coords):
+    def __init__(self, env_x, env_y, robot):
         self.env = Environment(env_x, env_y)
-        self.robot = Robot(robot_coords)
+        self.robot = robot
         self.env_vis = EnvironmentVisualizer(self.env, self.robot)
 
 
@@ -61,9 +49,6 @@ class EnvironmentVisualizer:
     @staticmethod
     def show_environment():
         plt.show()
-
-    def env_pauser(self):
-        self.ax.pause(0.1)
 
     def configure_plot(self):
         fig = plt.figure(figsize=(7, 7))
@@ -100,11 +85,16 @@ class EnvironmentVisualizer:
             self.ax.fill([a[0] for a in obstacle], [a[1] for a in obstacle], color="k")
 
     def fill_robot(self, color="blue"):
-        self.ax.fill([a[0] for a in self.robot.robot_coords], [a[1] for a in self.robot.robot_coords], color=color)
+        self.ax.fill([a[0] for a in self.robot.robot_current_state], [a[1] for a in self.robot.robot_current_state],
+                     color=color)
+
+    def fill_any_robot(self, robot, color="blue"):
+        self.ax.fill([a[0] for a in robot.robot_current_state], [a[1] for a in robot.robot_current_state],
+                     color=color)
 
     def plot_path(self, path):
         for i in range(len(path) - 1):
-            self.ax.plot([path[i][0], path[i+1][0]], [path[i][1], path[i+1][1]], color="k")
+            self.ax.plot([path[i][0], path[i + 1][0]], [path[i][1], path[i + 1][1]], color="k")
 
     def plot_tree(self):
         for k, v in self.environment.tree.tree.items():
