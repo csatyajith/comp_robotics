@@ -88,6 +88,10 @@ class EnvironmentVisualizer:
         self.ax.fill([a[0] for a in self.robot.robot_current_state], [a[1] for a in self.robot.robot_current_state],
                      color=color)
 
+    def fill_any_robot(self, robot, color="blue"):
+        self.ax.fill([a[0] for a in robot.robot_current_state], [a[1] for a in robot.robot_current_state],
+                     color=color)
+
     def plot_path(self, path):
         for i in range(len(path) - 1):
             self.ax.plot([path[i][0], path[i + 1][0]], [path[i][1], path[i + 1][1]], color="k")
