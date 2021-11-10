@@ -1,8 +1,8 @@
+import visualizer_utils
 import file_parse
 import visualizer
 from robot import Robot
 import sampler
-from environment_r import EnvSimulator
 import rrt
 import rrt_star
 
@@ -33,9 +33,9 @@ def test_rrt():
     robot = Robot(width, height)
     path = visualizer.visualize_rrt(robot, ob, pr[0][0], pr[0][1], 1000)
     if path is not None:
-        disc_path = visualizer.discretize_points_for_animation(path)
+        disc_path = visualizer_utils.discretize_points_for_animation(path)
         # animation.animate_plot(disc_path)
-        visualizer.visualize_path(robot, ob, pr, disc_path)
+        visualizer.visualize_path(robot, ob, pr, disc_path, file_name="rrt.gif")
 
 
 def test_rrt_star():
@@ -44,8 +44,8 @@ def test_rrt_star():
     path = visualizer.visualize_rrt_star(robot, ob, pr[0][0], pr[0][1], 1000)
 
     if path is not None:
-        disc_path = visualizer.discretize_points_for_animation(path)
-        visualizer.visualize_path(robot, ob, pr, path)
+        disc_path = visualizer_utils.discretize_points_for_animation(path)
+        visualizer.visualize_path(robot, ob, pr, disc_path, file_name="rrt_star.gif")
 
 
 def test_rrt_success_rate():

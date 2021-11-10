@@ -54,6 +54,7 @@ class EnvironmentVisualizer:
     def __init__(self, environment: Environment, robot: Robot):
         self.environment = environment
         self.ax = None
+        self.fig = None
         self.configure_plot()
         self.robot = robot
         self.box_environment()
@@ -66,10 +67,10 @@ class EnvironmentVisualizer:
         self.ax.pause(0.1)
 
     def configure_plot(self):
-        fig = plt.figure(figsize=(7, 7))
+        self.fig = plt.figure(figsize=(7, 7))
         self.ax = plt.axes()
         self.ax.set_aspect("equal")
-        return fig
+        return self.fig
 
     def box_environment(self):
         for row in range(self.environment.n_rows):
@@ -84,6 +85,32 @@ class EnvironmentVisualizer:
                     self.ax.plot([(j + 1), j], [(i + 1), (i + 1)], color="k")
                 if j == 0:
                     self.ax.plot([j, j], [(i + 1), i], color="k")
+
+    def animate_path(self, path, robot, file_name="rrt.gif"):
+        filler, = self.ax.plot([], [], 'r-')
+
+        def update(i):
+            xdata, ydata = [], []
+            robot.translate(path[i])
+            for x, y in robot.robot_coords:
+                xdata.append(x)
+                ydata.append(y)
+            xdata.append(robot.robot_coords[0][0])
+            ydata.append(robot.robot_coords[0][1])
+            filler.set_data(xdata, ydata)
+            return filler,
+
+        ani = animation.FuncAnimation(self.fig, update, frames=len(path), interval=50, blit=True, repeat=False)
+        writergif = animation.PillowWriter(fps=30)
+        ani.save(file_name, writer=writergif)
+        self.show_environment()
+
+    def animate_tree_construction(self, rrt_tree, file_name="rrt_tree.png"):
+        for p1, p2 in rrt_tree:
+            self.ax.plot([p1[0], p2[0]], [p1[1], p2[1]], color="k")
+            plt.pause(0.005)
+            plt.draw()
+        plt.savefig(file_name)
 
     def fill_points(self):
         for point in self.environment.points:

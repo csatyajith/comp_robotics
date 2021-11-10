@@ -2,6 +2,7 @@ import collision
 import file_parse
 import sampler
 import visualizer
+import visualizer_utils
 from environment_r import EnvSimulator
 from tree import Tree
 import rrt
@@ -50,7 +51,8 @@ def test_rrt():
     rc, ob, pr = file_parse.parse_problem("test_cases/robot_env_01.txt", "test_cases/probs_01.txt")
     path = visualizer.visualize_rrt(rc, ob, pr)
     if path is not None:
-        visualizer.visualize_path(rc, ob, pr, path)
+        discretized_path = visualizer_utils.discretize_points_for_animation(path)
+        visualizer.visualize_path(rc, ob, pr, discretized_path, "rrt.gif")
 
 
 def test_rrt_success_rate():
@@ -90,8 +92,9 @@ def test_rrt_star():
     rc, ob, pr = file_parse.parse_problem("test_cases/robot_env_01.txt", "test_cases/probs_01.txt")
     path = visualizer.visualize_rrt_star(rc, ob, pr)
     if path is not None:
-        visualizer.visualize_path(rc, ob, pr, path)
+        discretized_path = visualizer_utils.discretize_points_for_animation(path)
+        visualizer.visualize_path(rc, ob, pr, discretized_path, "rrt_star.gif")
 
 
 if __name__ == '__main__':
-    test_rrt_star_success_rate()
+    test_rrt()

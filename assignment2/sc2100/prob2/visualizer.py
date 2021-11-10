@@ -1,7 +1,6 @@
 import collision
 import rrt
 import rrt_star
-import utils
 from environment_r import EnvSimulator
 
 
@@ -98,7 +97,7 @@ def visualize_rrt(robot, obstacles, start, goal, n_iterations):
     success, tree, path = rrt.RRT(robot, obstacles, start, goal, n_iterations, plotter=None)
     print(success)
     env_sim.env.tree = tree
-    env_sim.env_vis.animate_tree_construction(tree.tree_list)
+    env_sim.env_vis.animate_tree_construction(tree.tree_list, file_name="rrt.png")
     # for key in env_sim.env.tree.tree:
     #     print(key, env_sim.env.tree.tree[key])
     env_sim.env_vis.show_environment()
@@ -126,14 +125,14 @@ def visualize_rrt_star(robot, obstacles, start, goal, n_iterations):
     success, tree, path = rrt_star.RRT_star(robot, obstacles, start, goal, n_iterations)
     print(success)
     env_sim.env.tree = tree
-    env_sim.env_vis.plot_tree()
+    env_sim.env_vis.animate_tree_construction(tree.tree_list, file_name="rrt_star.png")
     # for key in env_sim.env.tree.tree:
     #     print(key, env_sim.env.tree.tree[key])
     env_sim.env_vis.show_environment()
     return path
 
 
-def visualize_path(robot, ob, pr, path):
+def visualize_path(robot, ob, pr, path, file_name):
     env_sim = EnvSimulator(10, 10, robot)
 
     env_sim.env.set_start_state(pr[0][0])
@@ -152,7 +151,7 @@ def visualize_path(robot, ob, pr, path):
     env_sim.robot.transform()
     env_sim.env_vis.fill_robot(color="green")
 
-    env_sim.env_vis.animate_path(path, robot)
+    env_sim.env_vis.animate_path(path, robot, file_name=file_name)
     # print(len(path))
     # for i in range(len(path) - 1):
     #     env_sim.env_vis.ax.plot([path[i][0], path[i+1][0]], [path[i][1], path[i+1][1]])
@@ -163,24 +162,3 @@ def visualize_path(robot, ob, pr, path):
     env_sim.env_vis.show_environment()
 
 
-def discretize_points_for_animation(path):
-    discretization_const = 0.05
-    new_path = []
-    for i in range(len(path) - 1):
-        point1 = path[i]
-        point2 = path[i + 1]
-        i = point1
-        new_x, new_y, new_theta = point1
-        while True:
-            len_ab = utils.state_dist((new_x, new_y, new_theta), point2)
-            len_ratio = discretization_const / len_ab
-            new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 3)
-            new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 3)
-            new_theta = round((1 - len_ratio) * i[2] + len_ratio * point2[2], 3)
-            if utils.state_dist(point1, (new_x, new_y, new_theta)) < utils.state_dist(point1, point2):
-                i = new_x, new_y, new_theta
-                new_path.append(i)
-            else:
-                new_path.append(point2)
-                break
-    return new_path

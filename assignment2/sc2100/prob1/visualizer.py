@@ -2,6 +2,7 @@ import rrt
 import rrt_star
 from environment_r import EnvSimulator
 from matplotlib import pyplot as plt
+from environment_r import Robot
 
 
 def visualize_problem(points, robot, obstacles, start, goal):
@@ -31,9 +32,11 @@ def visualize_rrt(rc, ob, pr):
     env_sim.env_vis.fill_obstacles()
     env_sim.robot.translate(env_sim.env.end)
     env_sim.env_vis.fill_robot(color="green")
+
     success, tree, path = rrt.RRT(rc, ob, pr[0][0], pr[0][1], 1000, radius_around_goal=0.2)
     print(success)
     env_sim.env.tree = tree
+    env_sim.env_vis.animate_tree_construction(tree.tree_list, "rrt_tree.png")
     env_sim.env_vis.plot_tree()
     # for key in env_sim.env.tree.tree:
     #     print(key, env_sim.env.tree.tree[key])
@@ -55,12 +58,12 @@ def visualize_rrt_star(rc, ob, pr):
     success, tree, path = rrt_star.RRT_star(rc, ob, pr[0][0], pr[0][1], 500, 0.3, 0.4)
     print(success)
     env_sim.env.tree = tree
-    env_sim.env_vis.plot_tree()
+    env_sim.env_vis.animate_tree_construction(tree.tree_list, "rrt_star_tree.png")
     env_sim.env_vis.show_environment()
     return path
 
 
-def visualize_path(rc, ob, pr, path):
+def visualize_path(rc, ob, pr, path, filename):
     env_sim = EnvSimulator(10, 10, rc)
     env_sim.env_vis.fill_robot(color="blue")
     env_sim.env.set_start_state(pr[0][0])
@@ -71,8 +74,7 @@ def visualize_path(rc, ob, pr, path):
     env_sim.env_vis.fill_obstacles()
     env_sim.robot.translate(env_sim.env.end)
     env_sim.env_vis.fill_robot(color="green")
-    print(len(path))
-    for i in range(len(path) - 1):
-        env_sim.env_vis.ax.plot([path[i][0], path[i+1][0]], [path[i][1], path[i+1][1]])
+    env_sim.env_vis.animate_path(path, Robot(rc), filename)
     env_sim.env_vis.show_environment()
+
 

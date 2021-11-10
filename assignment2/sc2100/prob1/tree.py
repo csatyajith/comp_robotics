@@ -5,6 +5,7 @@ class Tree:
     def __init__(self, robot, obstacles, start, goal):
         self.tree = {start: set()}
         self.path_costs = {}
+        self.tree_list = []
         self.obstacles = obstacles
         self.robot = robot
         self.goal = goal
@@ -15,6 +16,7 @@ class Tree:
         if point1 != point2:
             self.tree[point1].add(point2)
             self.tree[point2] = set()
+            self.tree_list.append((point1, point2))
 
     def add_path_cost(self, point1, point2, cost):
         self.path_costs[(point1, point2)] = cost
