@@ -1,6 +1,7 @@
 import collision
 import rrt
 import rrt_star
+import utils
 from environment_r import EnvSimulator
 
 
@@ -146,15 +147,43 @@ def visualize_path(robot, ob, pr, path):
         env_sim.env.create_obstacle(o)
 
     env_sim.env_vis.fill_obstacles()
-    print(len(path))
-    for i in range(len(path) - 1):
-        env_sim.env_vis.ax.plot([path[i][0], path[i+1][0]], [path[i][1], path[i+1][1]])
-        env_sim.robot.set_pose(path[i+1])
-        env_sim.robot.transform()
-        env_sim.env_vis.fill_robot(color="violet")
 
     env_sim.robot.set_pose(env_sim.env.end)
     env_sim.robot.transform()
     env_sim.env_vis.fill_robot(color="green")
 
+    env_sim.env_vis.animate_plot(path, robot)
+    # print(len(path))
+    # for i in range(len(path) - 1):
+    #     env_sim.env_vis.ax.plot([path[i][0], path[i+1][0]], [path[i][1], path[i+1][1]])
+    #     env_sim.robot.set_pose(path[i+1])
+    #     env_sim.robot.transform()
+    #     env_sim.env_vis.fill_robot(color="violet")
+
     env_sim.env_vis.show_environment()
+
+
+def discretize_points_for_animation(path):
+    discretization_const = 0.05
+    new_path = []
+    for i in range(len(path) - 1):
+        point1 = path[i]
+        point2 = path[i + 1]
+        i = point1
+        new_x, new_y, new_theta = point1
+        while True:
+            len_ab = utils.state_dist((new_x, new_y, new_theta), point2)
+            len_ratio = discretization_const / len_ab
+            if len_ratio > 1:
+                new_path.append(point2)
+                break
+            new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 3)
+            new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 3)
+            new_theta = round((1 - len_ratio) * i[2] + len_ratio * point2[2], 3)
+            if utils.state_dist(point1, (new_x, new_y, new_theta)) < utils.state_dist(point1, point2):
+                i = new_x, new_y, new_theta
+                new_path.append(i)
+            else:
+                new_path.append(point2)
+                break
+    return new_path

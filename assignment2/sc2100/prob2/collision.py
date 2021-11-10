@@ -1,4 +1,4 @@
-from environment_r import Robot
+from robot import Robot
 
 
 def on_segment(p, q, r):

@@ -33,7 +33,9 @@ def test_rrt():
     robot = Robot(width, height)
     path = visualizer.visualize_rrt(robot, ob, pr[0][0], pr[0][1], 1000)
     if path is not None:
-        visualizer.visualize_path(robot, ob, pr, path)
+        disc_path = visualizer.discretize_points_for_animation(path)
+        # animation.animate_plot(disc_path)
+        visualizer.visualize_path(robot, ob, pr, disc_path)
 
 
 def test_rrt_star():
@@ -42,6 +44,7 @@ def test_rrt_star():
     path = visualizer.visualize_rrt_star(robot, ob, pr[0][0], pr[0][1], 1000)
 
     if path is not None:
+        disc_path = visualizer.discretize_points_for_animation(path)
         visualizer.visualize_path(robot, ob, pr, path)
 
 
@@ -84,5 +87,4 @@ def test_rrt_star_success_rate():
 
 
 if __name__ == '__main__':
-    test_rrt_success_rate()
-    test_rrt_star_success_rate()
+    test_rrt()

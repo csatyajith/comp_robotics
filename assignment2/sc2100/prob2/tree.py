@@ -77,7 +77,8 @@ class Tree:
             if point in v:
                 return k
 
-    def wrapped_angle_diff(self, a1, a2):
+    @staticmethod
+    def wrapped_angle_diff(a1, a2):
         diff = a1 - a2
         if diff > np.pi:
             diff -= 2 * np.pi
