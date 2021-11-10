@@ -98,7 +98,7 @@ def visualize_rrt(robot, obstacles, start, goal, n_iterations):
     success, tree, path = rrt.RRT(robot, obstacles, start, goal, n_iterations, plotter=None)
     print(success)
     env_sim.env.tree = tree
-    env_sim.env_vis.plot_tree()
+    env_sim.env_vis.animate_tree_construction(tree.tree_list)
     # for key in env_sim.env.tree.tree:
     #     print(key, env_sim.env.tree.tree[key])
     env_sim.env_vis.show_environment()
@@ -152,7 +152,7 @@ def visualize_path(robot, ob, pr, path):
     env_sim.robot.transform()
     env_sim.env_vis.fill_robot(color="green")
 
-    env_sim.env_vis.animate_plot(path, robot)
+    env_sim.env_vis.animate_path(path, robot)
     # print(len(path))
     # for i in range(len(path) - 1):
     #     env_sim.env_vis.ax.plot([path[i][0], path[i+1][0]], [path[i][1], path[i+1][1]])
@@ -174,9 +174,6 @@ def discretize_points_for_animation(path):
         while True:
             len_ab = utils.state_dist((new_x, new_y, new_theta), point2)
             len_ratio = discretization_const / len_ab
-            if len_ratio > 1:
-                new_path.append(point2)
-                break
             new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 3)
             new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 3)
             new_theta = round((1 - len_ratio) * i[2] + len_ratio * point2[2], 3)

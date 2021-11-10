@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt, animation
+import numpy as np
 
 
 class EnvironmentVisualizer:
@@ -14,7 +15,7 @@ class EnvironmentVisualizer:
     def show_environment():
         plt.show()
 
-    def animate_plot(self, path, robot):
+    def animate_path(self, path, robot):
         filler, = self.ax.plot([], [], 'r-')
 
         def update(i):
@@ -31,6 +32,28 @@ class EnvironmentVisualizer:
 
         ani = animation.FuncAnimation(self.fig, update, frames=len(path), interval=50, blit=True, repeat=False)
         self.show_environment()
+
+    def animate_tree_construction(self, rrt_tree):
+        for p1, p2 in rrt_tree:
+            self.ax.plot([p1[0], p2[0]], [p1[1], p2[1]], color="k")
+            plt.pause(0.1)
+            plt.draw()
+        # filler, = self.ax.plot([], [], 'b-')
+        # print(rrt_tree)
+        #
+        # def update(i):
+        #     x_coords, y_coords = [], []
+        #     for k in range(len(rrt_tree[:i])):
+        #         x_coords.extend([rrt_tree[k][0][0], rrt_tree[k][1][0]])
+        #         y_coords.extend([rrt_tree[k][0][1], rrt_tree[k][1][1]])
+        #
+        #     xx = np.vstack([x_coords[0::2], x_coords[1::2]])
+        #     yy = np.vstack([y_coords[0::2], y_coords[1::2]])
+        #     filler.set_data(xx, yy)
+        #     return filler,
+        #
+        # ani = animation.FuncAnimation(self.fig, update, frames=len(rrt_tree), interval=500, blit=True, repeat=False)
+        # self.show_environment()
 
     def configure_plot(self):
         self.fig = plt.figure(figsize=(7, 7))

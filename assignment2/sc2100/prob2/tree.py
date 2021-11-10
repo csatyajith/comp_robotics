@@ -6,6 +6,7 @@ import collision
 class Tree:
     def __init__(self, robot, obstacles, start, goal):
         self.tree = {start: set()}
+        self.tree_list = []
         self.path_costs = {}
         self.obstacles = obstacles
         self.robot = robot
@@ -17,6 +18,7 @@ class Tree:
         if self.state_dist(point1, point2) > self.eps:
             self.tree[point1].add(point2)
             self.tree[point2] = set()
+            self.tree_list.append((point1, point2))
 
     def add_path_cost(self, point1, point2, cost):
         self.path_costs[(point1, point2)] = cost
