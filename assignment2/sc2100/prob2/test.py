@@ -87,4 +87,4 @@ def test_rrt_star_success_rate():
 
 
 if __name__ == '__main__':
-    test_rrt()
+    test_rrt_star()
