@@ -58,7 +58,7 @@ def test_rrt_success_rate():
         print("Measuring with {} iterations".format(i))
         s = []
         for j in range(20):
-            success, tree, path = rrt.RRT(robot, ob, pr[0][0], pr[0][1], i, radius_around_goal=0.2)
+            success, tree, path = rrt.RRT(robot, ob, pr[0][0], pr[0][1], i, radius_around_goal=0.3)
             s.append(1 if success else 0)
         iterations.append(i)
         successes.append(sum(s)/len(s))
@@ -77,7 +77,7 @@ def test_rrt_star_success_rate():
         print("Measuring with {} iterations".format(i))
         s = []
         for j in range(20):
-            success, tree, path = rrt_star.RRT_star(robot, ob, pr[0][0], pr[0][1], i, radius_around_goal=0.2)
+            success, tree, path = rrt_star.RRT_star(robot, ob, pr[0][0], pr[0][1], i, radius_around_goal=0.3)
             s.append(1 if success else 0)
         iterations.append(i)
         successes.append(sum(s)/len(s))
@@ -87,4 +87,5 @@ def test_rrt_star_success_rate():
 
 
 if __name__ == '__main__':
-    test_rrt_star()
+    test_rrt_success_rate()
+    test_rrt_star_success_rate()

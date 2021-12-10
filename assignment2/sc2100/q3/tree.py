@@ -6,6 +6,7 @@ import collision
 class Tree:
     def __init__(self, robot, obstacles, start, goal):
         self.tree = {start: set()}
+        self.tree_list = []
         self.path_costs = {}
         self.obstacles = obstacles
         self.robot = robot
@@ -17,6 +18,7 @@ class Tree:
         if self.state_dist(point1, point2) > self.eps:
             self.tree[point1].add(point2)
             self.tree[point2] = set()
+            self.tree_list.append((point1, point2))
 
     def add_path_cost(self, point1, point2, cost):
         self.path_costs[(point1, point2)] = cost
@@ -77,7 +79,8 @@ class Tree:
             if point in v:
                 return k
 
-    def wrapped_angle_diff(self, a1, a2):
+    @staticmethod
+    def wrapped_angle_diff(a1, a2):
         diff = a1 - a2
         if diff > np.pi:
             diff -= 2 * np.pi
@@ -98,6 +101,11 @@ class Tree:
                 min_dist = distance
         return min_pt
 
+    def sample_u_durations(self, min_u, max_u):
+        random_us = [np.random.normal(min_u, max_u) for _ in range(10)]
+        random_durations = [np.random.randint(0, 10) for _ in range(10)]
+        return random_us, random_durations
+
     def extend(self, point1, point2, discretization_const=0.01, plotter=None):
         # Discretized version
         i = point1
@@ -108,7 +116,7 @@ class Tree:
             len_ab = self.state_dist((new_x, new_y, new_theta), point2)
             len_ratio = discretization_const / len_ab
             if len_ratio > 1:
-                return point2
+                break
             new_x = round((1 - len_ratio) * i[0] + len_ratio * point2[0], 3)
             new_y = round((1 - len_ratio) * i[1] + len_ratio * point2[1], 3)
             new_theta = round((1 - len_ratio) * i[2] + len_ratio * point2[2], 3)

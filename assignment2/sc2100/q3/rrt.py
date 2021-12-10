@@ -2,7 +2,7 @@ import sampler
 from tree import Tree
 
 
-def RRT(robot, obstacles, start, goal, n_iter, radius_around_goal=0.5, plotter=None):
+def RRT(robot, obstacles, start, goal, n_iter, radius_around_goal=0.4, plotter=None):
     rrt_tree = Tree(robot, obstacles, start, goal)
     radius = radius_around_goal
     success = False
